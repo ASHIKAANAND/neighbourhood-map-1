@@ -1,5 +1,6 @@
 //model for locations
-
+    var map;
+    var markers = [];
         var locations=[
         {
         title:'nelliyampathy',
@@ -38,10 +39,6 @@
         }
     ];
 
-
-
-    var map;
-    var markers = [];
     function initMap(){
         var styles = [
           {
@@ -117,14 +114,11 @@
             mapTypeControl:false
         });
 
-
-
-
         var largeInfoWindow =new google.maps.InfoWindow();
          var defaultIcon = makeMarkerIcon('0091ff');
         var highlightedIcon = makeMarkerIcon('FFFF24');
 
-
+//display markers
         for(var i=0;i<locations.length;i++){
             var position = locations[i].location;
             var title = locations[i].title;
@@ -138,6 +132,7 @@
             });
 
         markers.push(marker);
+         locations[i].marker = marker;
         marker.addListener('click',function(){
             populateInfoWindow(this,largeInfoWindow);
             loadData(this,position);
@@ -168,9 +163,6 @@ var wikiRequestTimeout = setTimeout(function(){
         return false;
 
 };
-
-
-
 
       marker.addListener('mouseover', function() {
             this.setIcon(highlightedIcon);
@@ -222,7 +214,7 @@ var wikiRequestTimeout = setTimeout(function(){
                 '<div>No Street View Found</div>');
             }
           }
-          // Use streetview service to get the closest streetview image within
+          // Using streetview service to get the closest streetview image within
           // 50 meters of the markers position
           streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
           // Open the infowindow on the correct marker.
@@ -255,13 +247,30 @@ var wikiRequestTimeout = setTimeout(function(){
         return markerImage;
       }
 
+    var mapfail = function() {
+    var maptimeout = setTimeout(function(){
+        alert("google maps not available!");
+    },5000);
+}
+
+function toggleBounce(marker) {
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+}
+
+
 var Location = function(data){
         this.title =ko.observable(data.title);
         this.location = ko.observable(data.location);
+        this.marker = ko.observable(data.marker);
       };
 
 //viewmodel
 var ViewModel = function(){
+
     var self= this;
     self.filter = ko.observable('');
 
@@ -275,26 +284,31 @@ var ViewModel = function(){
     var filter = this.filter().toLowerCase();// to convert to lowercase.
 
     if (!filter) {
-        return self.placesArray(); // if filter() is empty return the list view.
-    } else {
-        return ko.utils.arrayFilter(self.placesArray(), function(item) {
-                var name = item.title().toLowerCase().indexOf(filter)!==-1;
-                        item.markers.setVisible(name);
+        return self.placesArray();// if filter() is empty return the list view.
+    }
 
+    else {
+        return ko.utils.arrayFilter(locations, function(item) {
+                var name = item.title.toLowerCase().indexOf(filter)!==-1;
+                 item.marker.setVisible(name); // display the filtered markers
                 return name;
-                console.log("hii");
-
-
         });
     }
 }, self);
 
 
+        this.currentPlace = ko.observable('');
+        //animate the cliked list-element
+   this.setMarker =function(clickedfilteredItem){
+    self.currentPlace(clickedfilteredItem);
+    console.log(self.currentPlace().title());
+                toggleBounce(self.currentPlace().marker());
+
+   }
+
  };
-
-
-
 ko.applyBindings(new ViewModel());
+
 
 
 
