@@ -19,7 +19,7 @@
           <input id="hide-listings" type="button" value="Hide Listings">
          <p>Search: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
          <ul data-bind="foreach:filteredItems ">
-         <li data-bind ="text: title"></li>
+         <li data-bind ="text: title, click: $parent.setMarker"></li>
          </ul>
 
     <div class="wikipedia-container">
