@@ -112,7 +112,7 @@
 
         map = new google.maps.Map(document.getElementById('map'),{
             center:{lat:10.5276,lng:76.2144},
-            zoom:13,
+            zoom:10,
             styles:styles,
             mapTypeControl:false
         });
@@ -260,25 +260,31 @@ var Location = function(data){
         this.location = ko.observable(data.location);
       };
 
+//viewmodel
 var ViewModel = function(){
     var self= this;
-         self.filter = ko.observable(' ');
+    self.filter = ko.observable('');
 
     this.placesArray = ko.observableArray([]);
      locations.forEach(function(locItem){
         self.placesArray.push(new Location(locItem));
     });
 
+// function for filtering using knockout
      self.filteredItems = ko.computed(function() {
+    var filter = this.filter().toLowerCase();// to convert to lowercase.
 
-    var filter = this.filter().toLowerCase();
     if (!filter) {
-        // for(var i=0;i<locations.length;i++)
-        return self.placesArray;
+        return self.placesArray(); // if filter() is empty return the list view.
     } else {
         return ko.utils.arrayFilter(self.placesArray(), function(item) {
-                var name = item.title.toLowerCase().indexOf(filter)!==-1;
+                var name = item.title().toLowerCase().indexOf(filter)!==-1;
+                        item.markers.setVisible(name);
+
                 return name;
+                console.log("hii");
+
+
         });
     }
 }, self);
@@ -289,25 +295,6 @@ var ViewModel = function(){
 
 
 ko.applyBindings(new ViewModel());
-
-
-// self.filteredItems = ko.computed(function() {
-//          this.filter = ko.observable(' ');
-
-//     var filter = this.filter().toLowerCase();
-//     if (!filter) {
-//         for(var i=0;i<placesArray.length;i++)
-//         return this.placesArray[i];
-//     } else {
-//         return ko.utils.arrayFilter(self.placesArray(), function(item) {
-//                 var name = item.title.toLowerCase();
-//                 var check = name.indexOf(filter)!==-1;
-//                                 item.marker.setVisible(check);
-
-//                 return check;
-//         });
-//     }
-// }, this);
 
 
 
