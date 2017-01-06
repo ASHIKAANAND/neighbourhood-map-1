@@ -276,6 +276,7 @@ myClickEventHandler = function(currentItem) {
     }
 };
 
+
 //show all markers
 function markervisible(){
      for(var i=0;i<markers.length;i++){
@@ -323,7 +324,11 @@ var ViewModel = function(){
 self.placesArray().forEach(function(myItem, index) {
     myItem.id = index;
 });
-
+opennav=function (){
+    console.log("helo");
+    self.rev =ko.observable(1);
+    console.log(self.rev());
+}
  };
 ko.applyBindings(new ViewModel());
 
