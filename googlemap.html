@@ -12,14 +12,21 @@
 
 <body>
 <div class="container">
-      <div class="options-box">
+  <div class="menu-btn" data-bind="click: opennav ">      <!-- for hamburger icon -->
+    <div></div>
+    <span></span>
+    <span></span>
+    <span></span>
+    </div>
+
+      <nav class="options-box" data-bind = "css :{nav.open: rev()>0}">
         <h1> Let's visit</h1>
         <div>
           <input id="show-listings" type="button" value="Show Listings">
           <input id="hide-listings" type="button" value="Hide Listings">
          <p>Search: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
          <ul data-bind="foreach:filteredItems ">
-         <li data-bind ="text: title, click: myClickEventHandler"></li>
+         <li data-bind ="text: title, click: myClickEventHandler "></li>
          </ul>
 
     <div class="wikipedia-container">
@@ -27,8 +34,8 @@
         <ul id="wikipedia-links"></ul>
     </div>
         </div>
-</div>
-      <div id="map"></div>
+</nav>
+      <main id="map"></div>
     </div>
     </div>
 
