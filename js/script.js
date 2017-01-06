@@ -1,6 +1,8 @@
 //model for locations
     var map;
     var markers = [];
+
+    // model
         var locations=[
         {
         title:'nelliyampathy',
@@ -117,34 +119,39 @@
         var largeInfoWindow =new google.maps.InfoWindow();
          var defaultIcon = makeMarkerIcon('0091ff');
         var highlightedIcon = makeMarkerIcon('FFFF24');
+         var highlightIcon = makeMarkerIcon('FF0000');
+
 
 //display markers
         for(var i=0;i<locations.length;i++){
             var position = locations[i].location;
             var title = locations[i].title;
             var marker = new google.maps.Marker({
-                map:map,
-                position:position,
-                title:title,
-                animation:google.maps.Animation.DROP,// to animate markers drop down
-                icon:defaultIcon,
-                id:i
+                map: map,
+                position: position,
+                title: title,
+                animation: google.maps.Animation.DROP,// to animate markers drop down
+                icon: defaultIcon,
+                id: i
             });
 
         markers.push(marker);
          locations[i].marker = marker;
+         //when marker is clicked infowindow opens.
         marker.addListener('click',function(){
+            this.setIcon(highlightIcon);
             populateInfoWindow(this,largeInfoWindow);
             loadData(this,position);
         });
 
+// load wikipedia elements
         function loadData(marker,title) {
     var $wikiElem = $('#wikipedia-links');
     $wikiElem.text(" ");
          var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+marker.title+'&format=json&callback=wikiCallback';
 var wikiRequestTimeout = setTimeout(function(){
     $wikiElem.text("failed to load wikipedia resources");
-    alert("please load later");
+    alert("wikipedia data not available,please load later");
     },8000);// to check when not loaded
 
     $.ajax({
@@ -247,26 +254,41 @@ var wikiRequestTimeout = setTimeout(function(){
         return markerImage;
       }
 
-    var mapfail = function() {
+    var error = function() {
     var maptimeout = setTimeout(function(){
         alert("google maps not available!");
     },5000);
 }
 
-function toggleBounce(marker) {
-    if (marker.getAnimation() !== null) {
+
+myClickEventHandler = function(currentItem) {
+     var index = currentItem.id;
+     var marker = markers[index];
+             var largeInfoWindow =new google.maps.InfoWindow();
+
+     console.log(marker); // Double check the marker object
+      populateInfoWindow(marker,largeInfoWindow);//shows infowindow when a list element if cliked
+     //animate the marker when list element is clicked
+      if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
     } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
     }
-}
+};
 
+//show all markers
+function markervisible(){
+     for(var i=0;i<markers.length;i++){
+        markers[i].setVisible();
+       }
+    };
 
 var Location = function(data){
         this.title =ko.observable(data.title);
         this.location = ko.observable(data.location);
         this.marker = ko.observable(data.marker);
       };
+
 
 //viewmodel
 var ViewModel = function(){
@@ -284,27 +306,23 @@ var ViewModel = function(){
     var filter = this.filter().toLowerCase();// to convert to lowercase.
 
     if (!filter) {
-        return self.placesArray();// if filter() is empty return the list view.
-    }
+        markervisible();//show all markers
+         return self.placesArray();
+        }// if filter() is empty return the list view.
 
-    else {
+     else {
         return ko.utils.arrayFilter(locations, function(item) {
-                var name = item.title.toLowerCase().indexOf(filter)!==-1;
-                 item.marker.setVisible(name); // display the filtered markers
-                return name;
+                var visibleplaces = item.title.toLowerCase().indexOf(filter)!==-1;
+                 item.marker.setVisible(visibleplaces); // display the filtered markers
+                return visibleplaces;
         });
     }
 }, self);
 
 
-        this.currentPlace = ko.observable('');
-        //animate the cliked list-element
-   this.setMarker =function(clickedfilteredItem){
-    self.currentPlace(clickedfilteredItem);
-    console.log(self.currentPlace().title());
-                toggleBounce(self.currentPlace().marker());
-
-   }
+self.placesArray().forEach(function(myItem, index) {
+    myItem.id = index;
+});
 
  };
 ko.applyBindings(new ViewModel());
