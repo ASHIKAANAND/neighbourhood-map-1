@@ -10,44 +10,37 @@
 
 </head>
 
+
 <body>
 <div class="container">
-  <div class="menu-btn" data-bind="click: opennav ">      <!-- for hamburger icon -->
+  <div class="menu-btn" data-bind="click: opennav">      <!-- for hamburger icon -->
     <div></div>
     <span></span>
     <span></span>
     <span></span>
     </div>
 
-      <nav class="options-box" data-bind = "css :{nav.open: rev()>0}">
+      <nav class="options-box open" data-bind = "css :{'open': rev}">
         <h1> Let's visit</h1>
         <div>
           <input id="show-listings" type="button" value="Show Listings">
           <input id="hide-listings" type="button" value="Hide Listings">
-         <p>Search: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
+         <p>Search: <input class="formbox" data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
          <ul data-bind="foreach:filteredItems ">
          <li data-bind ="text: title, click: myClickEventHandler "></li>
          </ul>
-
-    <div class="wikipedia-container">
-        <h3 id="wikipedia-header"> Wikipedia Links for the place</h3>
-        <ul id="wikipedia-links"></ul>
-    </div>
         </div>
 </nav>
-      <main id="map"></div>
+      <main id="map"></main>
     </div>
     </div>
-
-
-
-    <script async defer
+  <script src="js/libs/jquery.min.js"></script>
+  <script src="js/libs/knockout.js"></script>
+  <script src="js/script.js"></script>
+         <script async defer
         src=
         "https://maps.googleapis.com/maps/api/js?key=AIzaSyAK00j4pg-v3EpKAArqa77Ge5nzkoHLLxY&libraries=geometry&v=3&callback=initMap"   onerror="error()">
     </script>
-      <script src="js/libs/jquery.min.js"></script>
-      <script src="js/libs/knockout.js"></script>
-      <script src="js/script.js"></script>
 
 
 </body>
