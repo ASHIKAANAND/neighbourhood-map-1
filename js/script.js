@@ -14,32 +14,25 @@
             title:'vadakunnathan',
             location:{lat:10.5243,lng:76.2135}
     },
-        {
-            title:'kerala police accademy',
-            location:{lat:10.5686,lng:76.2339}},
-        {
+       {
             title:'Parambikulam',
             location:{lat:10.3929,lng:76.7756}
-        },
-        {
-            title:'Thrissur zoo',
-            location:{lat:10.5307,lng: 76.2212}
         },
         {
             title:'Chimminy wild life',
             location:{lat:10.4310,lng: 76.4910}
         },
          {
-            title:'Peechi Dam',
-            location:{lat:10.5301,lng:76.3699}
-        },
-         {
             title:'Peechi-Vazhani Wild life sanctuary',
             location:{lat:10.4834,lng: 76.4332}
         },
-         {
-            title:'Sholayar Reserve forest',
-            location:{lat:10.3576,lng: 76.5719}
+        {
+           title:'kozhikode beach',
+            location:{lat:11.2626,lng: 75.7673},
+        },
+        {
+           title:'Athirapilly falls',
+            location:{lat:10.2851,lng: 76.5698}
         }
     ];
 
@@ -287,7 +280,7 @@ opennav = function (){
 //      var marker = markers[index];
 //              var largeInfoWindow =new google.maps.InfoWindow();
 
-//      console.log(marker); // Double check the marker object
+//      // console.log(marker); // Double check the marker object
 //       populateInfoWindow(marker,largeInfoWindow);//shows infowindow when a list element if cliked
 //      //animate the marker when list element is clicked
 //       if (marker.getAnimation() !== null) {
@@ -299,22 +292,12 @@ opennav = function (){
 
 
 myClickEventHandler = function(currentItem) {
-     // var index = currentItem.id;
-     // var marker = markers[index];
-     google.maps.event.trigger(currentItem.marker, 'click');
-     var largeInfoWindow =new google.maps.InfoWindow();
-     // console.log(this.mark()); // Double check the marker object
-      populateInfoWindow(currentItem.marker,largeInfoWindow);//shows infowindow when a list element if cliked
-     //animate the marker when list element is clicked
-      if (currentItem.marker.getAnimation() !== null) {
-        currentItem.marker.setAnimation(null);
-    } else {
-        currentItem.marker.setAnimation(google.maps.Animation.BOUNCE);
-         setTimeout(function() {
-            currentItem.marker.setAnimation(null);
-        }, 2000);
-    }
-};
+     var index = currentItem.id;
+     var marker = markers[index];
+     google.maps.event.trigger(marker, 'click');
+     console.log("hi");
+}
+
 
 var Location = function(data){
         this.title =ko.observable(data.title);
@@ -348,18 +331,18 @@ var ViewModel = function(){
         return ko.utils.arrayFilter(locations, function(item) {
                 var visibleplaces = item.title.toLowerCase().indexOf(filter)!==-1;
                  item.marker.setVisible(visibleplaces); // display the filtered markers
-
                 return visibleplaces;
         });
     }
 
-
 }, self);
 
+           self.placesArray().forEach(function(myItem, index) {
+        // console.log(filteredItems());
+    myItem.id = index;
+});
 
-//   self..forEach(function(myItem, index) {
-//     myItem.id = index;
-// });
+
 
 
  };
